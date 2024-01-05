@@ -1,9 +1,9 @@
-import assertString from './util/assertString';
+import assertString from './util/assertString.js';
 
-import isByteLength from './isByteLength';
-import isFQDN from './isFQDN';
-import isIP from './isIP';
-import merge from './util/merge';
+import isByteLength from './isByteLength.js';
+import isFQDN from './isFQDN.js';
+import isIP from './isIP.js';
+import merge from './util/merge.js';
 
 const default_email_options = {
   allow_display_name: false,
@@ -22,9 +22,12 @@ const default_email_options = {
 const splitNameAddress = /^([^\x00-\x1F\x7F-\x9F\cX]+)</i;
 const emailUserPart = /^[a-z\d!#\$%&'\*\+\-\/=\?\^_`{\|}~]+$/i;
 const gmailUserPart = /^[a-z\d]+$/;
-const quotedEmailUser = /^([\s\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e]|(\\[\x01-\x09\x0b\x0c\x0d-\x7f]))*$/i;
-const emailUserUtf8Part = /^[a-z\d!#\$%&'\*\+\-\/=\?\^_`{\|}~\u00A1-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+$/i;
-const quotedEmailUserUtf8 = /^([\s\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|(\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*$/i;
+const quotedEmailUser =
+  /^([\s\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e]|(\\[\x01-\x09\x0b\x0c\x0d-\x7f]))*$/i;
+const emailUserUtf8Part =
+  /^[a-z\d!#\$%&'\*\+\-\/=\?\^_`{\|}~\u00A1-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+$/i;
+const quotedEmailUserUtf8 =
+  /^([\s\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|(\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*$/i;
 const defaultMaxEmailLength = 254;
 /* eslint-enable max-len */
 /* eslint-enable no-control-regex */
@@ -51,7 +54,8 @@ function validateDisplayName(display_name) {
 
     // the quotes in display name must start with character symbol \
     const all_start_with_back_slash =
-      display_name_without_quotes.split('"').length === display_name_without_quotes.split('\\"').length;
+      display_name_without_quotes.split('"').length ===
+      display_name_without_quotes.split('\\"').length;
     if (!all_start_with_back_slash) {
       return false;
     }
@@ -59,7 +63,6 @@ function validateDisplayName(display_name) {
 
   return true;
 }
-
 
 export default function isEmail(str, options) {
   assertString(str);
@@ -101,13 +104,19 @@ export default function isEmail(str, options) {
     return false;
   }
 
-  if (options.host_whitelist.length > 0 && !options.host_whitelist.includes(lower_domain)) {
+  if (
+    options.host_whitelist.length > 0 &&
+    !options.host_whitelist.includes(lower_domain)
+  ) {
     return false;
   }
 
   let user = parts.join('@');
 
-  if (options.domain_specific_validation && (lower_domain === 'gmail.com' || lower_domain === 'googlemail.com')) {
+  if (
+    options.domain_specific_validation &&
+    (lower_domain === 'gmail.com' || lower_domain === 'googlemail.com')
+  ) {
     /*
       Previously we removed dots for gmail addresses before validating.
       This was removed because it allows `multiple..dots@gmail.com`
@@ -133,18 +142,20 @@ export default function isEmail(str, options) {
     }
   }
 
-  if (options.ignore_max_length === false && (
-    !isByteLength(user, { max: 64 }) ||
-    !isByteLength(domain, { max: 254 }))
+  if (
+    options.ignore_max_length === false &&
+    (!isByteLength(user, { max: 64 }) || !isByteLength(domain, { max: 254 }))
   ) {
     return false;
   }
 
-  if (!isFQDN(domain, {
-    require_tld: options.require_tld,
-    ignore_max_length: options.ignore_max_length,
-    allow_underscores: options.allow_underscores,
-  })) {
+  if (
+    !isFQDN(domain, {
+      require_tld: options.require_tld,
+      ignore_max_length: options.ignore_max_length,
+      allow_underscores: options.allow_underscores,
+    })
+  ) {
     if (!options.allow_ip_domain) {
       return false;
     }
@@ -164,13 +175,14 @@ export default function isEmail(str, options) {
 
   if (user[0] === '"') {
     user = user.slice(1, user.length - 1);
-    return options.allow_utf8_local_part ?
-      quotedEmailUserUtf8.test(user) :
-      quotedEmailUser.test(user);
+    return options.allow_utf8_local_part
+      ? quotedEmailUserUtf8.test(user)
+      : quotedEmailUser.test(user);
   }
 
-  const pattern = options.allow_utf8_local_part ?
-    emailUserUtf8Part : emailUserPart;
+  const pattern = options.allow_utf8_local_part
+    ? emailUserUtf8Part
+    : emailUserPart;
 
   const user_parts = user.split('.');
   for (let i = 0; i < user_parts.length; i++) {
@@ -179,7 +191,8 @@ export default function isEmail(str, options) {
     }
   }
   if (options.blacklisted_chars) {
-    if (user.search(new RegExp(`[${options.blacklisted_chars}]+`, 'g')) !== -1) return false;
+    if (user.search(new RegExp(`[${options.blacklisted_chars}]+`, 'g')) !== -1)
+      return false;
   }
 
   return true;

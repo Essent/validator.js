@@ -1,4 +1,4 @@
-import assertString from './util/assertString';
+import assertString from './util/assertString.js';
 
 const possibleIsbn10 = /^(?:[0-9]{9}X|[0-9]{10})$/;
 const possibleIsbn13 = /^(?:[0-9]{13})$/;
@@ -34,7 +34,7 @@ export default function isISBN(isbn, options) {
       checksum += 10 * sanitizedIsbn.charAt(9);
     }
 
-    if ((checksum % 11) === 0) {
+    if (checksum % 11 === 0) {
       return true;
     }
   } else if (version === '13') {

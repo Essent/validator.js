@@ -1,9 +1,7 @@
-import assertString from './util/assertString';
-
+import assertString from './util/assertString.js';
 
 let imeiRegexWithoutHypens = /^[0-9]{15}$/;
 let imeiRegexWithHypens = /^\d{2}-\d{6}-\d{6}-\d{1}$/;
-
 
 export default function isIMEI(str, options) {
   assertString(str);
@@ -16,7 +14,6 @@ export default function isIMEI(str, options) {
   if (options.allow_hyphens) {
     imeiRegex = imeiRegexWithHypens;
   }
-
 
   if (!imeiRegex.test(str)) {
     return false;
@@ -42,7 +39,7 @@ export default function isIMEI(str, options) {
       mul -= 1;
     }
   }
-  const chk = ((10 - (sum % 10)) % 10);
+  const chk = (10 - (sum % 10)) % 10;
   if (chk !== parseInt(str.substring(14, 15), 10)) {
     return false;
   }

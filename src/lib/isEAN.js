@@ -12,7 +12,7 @@
  * Reference: https://www.gtin.info/
  */
 
-import assertString from './util/assertString';
+import assertString from './util/assertString.js';
 
 /**
  * Define EAN Lenghts; 8 for EAN-8; 13 for EAN-13; 14 for EAN-14
@@ -22,7 +22,6 @@ import assertString from './util/assertString';
 const LENGTH_EAN_8 = 8;
 const LENGTH_EAN_14 = 14;
 const validEanRegex = /^(\d{8}|\d{13}|\d{14})$/;
-
 
 /**
  * Get position weight given:
@@ -34,10 +33,10 @@ const validEanRegex = /^(\d{8}|\d{13}|\d{14})$/;
  */
 function getPositionWeightThroughLengthAndIndex(length, index) {
   if (length === LENGTH_EAN_8 || length === LENGTH_EAN_14) {
-    return (index % 2 === 0) ? 3 : 1;
+    return index % 2 === 0 ? 3 : 1;
   }
 
-  return (index % 2 === 0) ? 1 : 3;
+  return index % 2 === 0 ? 1 : 3;
 }
 
 /**
@@ -51,7 +50,10 @@ function calculateCheckDigit(ean) {
   const checksum = ean
     .slice(0, -1)
     .split('')
-    .map((char, index) => Number(char) * getPositionWeightThroughLengthAndIndex(ean.length, index))
+    .map(
+      (char, index) =>
+        Number(char) * getPositionWeightThroughLengthAndIndex(ean.length, index)
+    )
     .reduce((acc, partialSum) => acc + partialSum, 0);
 
   const remainder = 10 - (checksum % 10);
@@ -71,5 +73,7 @@ export default function isEAN(str) {
   assertString(str);
   const actualCheckDigit = Number(str.slice(-1));
 
-  return validEanRegex.test(str) && actualCheckDigit === calculateCheckDigit(str);
+  return (
+    validEanRegex.test(str) && actualCheckDigit === calculateCheckDigit(str)
+  );
 }

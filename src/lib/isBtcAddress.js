@@ -1,4 +1,4 @@
-import assertString from './util/assertString';
+import assertString from './util/assertString.js';
 
 const bech32 = /^(bc1)[a-z0-9]{25,39}$/;
 const base58 = /^(1|3)[A-HJ-NP-Za-km-z1-9]{25,39}$/;

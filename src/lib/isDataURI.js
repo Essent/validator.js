@@ -1,4 +1,4 @@
-import assertString from './util/assertString';
+import assertString from './util/assertString.js';
 
 const validMediaType = /^[a-z]+\/[a-z0-9\-\+\._]+$/i;
 
@@ -23,7 +23,9 @@ export default function isDataURI(str) {
   }
   for (let i = 0; i < attributes.length; i++) {
     if (
-      !(i === attributes.length - 1 && attributes[i].toLowerCase() === 'base64') &&
+      !(
+        i === attributes.length - 1 && attributes[i].toLowerCase() === 'base64'
+      ) &&
       !validAttribute.test(attributes[i])
     ) {
       return false;

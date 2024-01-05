@@ -1,26 +1,19 @@
-import test from '../testFunctions';
+import { describe, it } from 'vitest';
+import test from '../testFunctions.js';
 
 describe('isFQDN', () => {
   it('should validate domain names.', () => {
     test({
       validator: 'isFQDN',
       args: [],
-      valid: [
-        'google.com',
-      ],
-      invalid: [
-        'google.l33t',
-      ],
+      valid: ['google.com'],
+      invalid: ['google.l33t'],
     });
     test({
       validator: 'isFQDN',
       args: [{ allow_numeric_tld: true }],
-      valid: [
-        'google.com',
-        'google.l33t',
-      ],
-      invalid: [
-      ],
+      valid: ['google.com', 'google.l33t'],
+      invalid: [],
     });
   });
 });

@@ -1,4 +1,5 @@
-import test from '../testFunctions';
+import { describe, it } from 'vitest';
+import test from '../testFunctions.js';
 
 describe('isAfter', () => {
   it('should validate dates against a start date', () => {

@@ -1,6 +1,6 @@
-import assertString from './util/assertString';
-import toString from './util/toString';
-import merge from './util/merge';
+import assertString from './util/assertString.js';
+import toString from './util/toString.js';
+import merge from './util/merge.js';
 
 const defaulContainsOptions = {
   ignoreCase: false,
@@ -12,7 +12,10 @@ export default function contains(str, elem, options) {
   options = merge(options, defaulContainsOptions);
 
   if (options.ignoreCase) {
-    return str.toLowerCase().split(toString(elem).toLowerCase()).length > options.minOccurrences;
+    return (
+      str.toLowerCase().split(toString(elem).toLowerCase()).length >
+      options.minOccurrences
+    );
   }
 
   return str.split(toString(elem)).length > options.minOccurrences;
